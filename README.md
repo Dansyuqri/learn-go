@@ -1,2 +1,2 @@
-# learn-go
-This repository is a project for me to explore Go.
+# saferm
+A command-line tool for removing files from a directory in a safe fashion. Written in Go.
