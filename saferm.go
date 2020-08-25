@@ -12,8 +12,5 @@ func main() {
 func validateDir(dirPath string) (valid bool) {
 	_, err := ioutil.ReadDir(dirPath)
 
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }
