@@ -27,7 +27,20 @@ func createTemp(exts []string) (tempDir string) {
 		}
 	}
 
-	return tempDir
+	return
+}
+
+func readDirFileNames(dirPath string) (fileNames []string) {
+	fileInfo, err := ioutil.ReadDir(dirPath)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, file := range fileInfo {
+		fileNames = append(fileNames, file.Name())
+	}
+	return
 }
 
 func TestCreateTemp(t *testing.T) {
@@ -36,22 +49,14 @@ func TestCreateTemp(t *testing.T) {
 
 	tempDir := createTemp(exts)
 	defer os.RemoveAll(tempDir)
-	fileInfo, err := ioutil.ReadDir(tempDir)
 
-	if err != nil {
-		log.Fatal(err)
+	fileNames := readDirFileNames(tempDir)
+	if len(fileNames) != len(exts) {
+		t.Errorf("want %v, got %v", len(exts), len(fileNames))
 	}
 
-	if len(fileInfo) != len(exts) {
-		t.Errorf("want %v, got %v", len(exts), len(fileInfo))
-	}
-
-	createdFileNames := []string{}
-	for _, file := range fileInfo {
-		createdFileNames = append(createdFileNames, file.Name())
-	}
-	if !reflect.DeepEqual(createdFileNames, tempFiles) {
-		t.Errorf("Files created: %v,  not equal to tempFiles: %v", createdFileNames, tempFiles)
+	if !reflect.DeepEqual(fileNames, tempFiles) {
+		t.Errorf("Files created: %v,  not equal to tempFiles: %v", fileNames, tempFiles)
 	}
 }
 
