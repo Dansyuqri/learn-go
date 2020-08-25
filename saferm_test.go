@@ -1,4 +1,4 @@
-package main_test
+package main
 
 import (
 	"io/ioutil"
@@ -43,4 +43,17 @@ func TestCreateTemp(t *testing.T) {
 	if len(fileInfo) != len(exts) {
 		t.Errorf("want %v, got %v", len(exts), len(fileInfo))
 	}
+}
+
+func TestValidateDir(t *testing.T) {
+	t.Run("Invalid Path", func(t *testing.T) {
+		if validateDir("!@#$%^&**^%$#@!") {
+			t.Error("Invalid path produced `true`")
+		}
+	})
+
+	exts := []string{}
+
+	tempDir := createTemp(exts)
+	defer os.RemoveAll(tempDir)
 }
