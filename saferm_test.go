@@ -18,7 +18,7 @@ func createTemp(exts []string) (tempDir string) {
 
 	for _, ext := range exts {
 		var strBuilder strings.Builder
-		strBuilder.WriteString("tmpfile")
+		strBuilder.WriteString("tempfile")
 		strBuilder.WriteString(ext)
 		tmpFile := filepath.Join(tempDir, strBuilder.String())
 		if err := ioutil.WriteFile(tmpFile, tempContent, 0666); err != nil {
