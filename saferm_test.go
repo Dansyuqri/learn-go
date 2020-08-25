@@ -56,4 +56,10 @@ func TestValidateDir(t *testing.T) {
 
 	tempDir := createTemp(exts)
 	defer os.RemoveAll(tempDir)
+
+	t.Run("Valid Path", func(t *testing.T) {
+		if !validateDir(tempDir) {
+			t.Error("Valid path produced `false`")
+		}
+	})
 }
