@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -31,6 +32,7 @@ func createTemp(exts []string) (tempDir string) {
 
 func TestCreateTemp(t *testing.T) {
 	exts := []string{".py", ".txt", ".java"}
+	tempFiles := []string{"tempfile.java", "tempfile.py", "tempfile.txt"}
 
 	tempDir := createTemp(exts)
 	defer os.RemoveAll(tempDir)
@@ -42,6 +44,14 @@ func TestCreateTemp(t *testing.T) {
 
 	if len(fileInfo) != len(exts) {
 		t.Errorf("want %v, got %v", len(exts), len(fileInfo))
+	}
+
+	createdFileNames := []string{}
+	for _, file := range fileInfo {
+		createdFileNames = append(createdFileNames, file.Name())
+	}
+	if !reflect.DeepEqual(createdFileNames, tempFiles) {
+		t.Errorf("Files created: %v,  not equal to tempFiles: %v", createdFileNames, tempFiles)
 	}
 }
 
