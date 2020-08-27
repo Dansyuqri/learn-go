@@ -39,19 +39,6 @@ func createTemp(exts []string) (tempDir string) {
 	return
 }
 
-func readDirFileNames(dirPath string) (fileNames []string) {
-	fileInfo, err := ioutil.ReadDir(dirPath)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, file := range fileInfo {
-		fileNames = append(fileNames, file.Name())
-	}
-	return
-}
-
 func setupTestCase(exts []string, t *testing.T) (tempDir string, cleanUpFunc func(t *testing.T)) {
 	tempDir = createTemp(exts)
 
@@ -107,6 +94,20 @@ func TestValidateDir(t *testing.T) {
 			t.Error("Valid path produced `false`")
 		}
 	})
+}
+
+func TestReadDirFileNames(t *testing.T) {
+	exts := []string{".py", ".txt", ".java"}
+	tempFiles := []string{"tempfile.java", "tempfile.py", "tempfile.txt"}
+
+	tempDir, cleanUpFunc := setupTestCase(exts, t)
+	defer cleanUpFunc(t)
+
+	fileNames := readDirFileNames(tempDir)
+
+	if !reflect.DeepEqual(fileNames, tempFiles) {
+		t.Errorf("Files created: %v,  not equal to tempFiles: %v", fileNames, tempFiles)
+	}
 }
 
 func TestSafeRM(t *testing.T) {

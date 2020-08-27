@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"strings"
 )
@@ -17,6 +18,19 @@ func getUserInput(stdin io.Reader) string {
 	reader := bufio.NewReader(stdin)
 	userInput, _ := reader.ReadString('\n')
 	return userInput
+}
+
+func readDirFileNames(dirPath string) (fileNames []string) {
+	fileInfo, err := ioutil.ReadDir(dirPath)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, file := range fileInfo {
+		fileNames = append(fileNames, file.Name())
+	}
+	return
 }
 
 func safeRM(filePath string, stdin io.Reader) (pass bool) {
