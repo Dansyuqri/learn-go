@@ -12,7 +12,6 @@ func main() {
 }
 
 func getUserInput(stdin io.Reader) string {
-	fmt.Print("Enter text: ")
 	reader := bufio.NewReader(stdin)
 	userInput, _ := reader.ReadString('\n')
 	return userInput
