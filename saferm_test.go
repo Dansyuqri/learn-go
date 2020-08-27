@@ -11,6 +11,14 @@ import (
 	"testing"
 )
 
+func compareDirFiles(tmpFile string, tempDir string, stdin bytes.Buffer, expectedRMFlag bool, altered []string, t *testing.T) {
+	safeRMFlag := safeRM(tmpFile, &stdin)
+	safeRMFiles := readDirFileNames(tempDir)
+	if safeRMFlag != expectedRMFlag || !reflect.DeepEqual(altered, safeRMFiles) {
+		t.Errorf("Files safeRM: %v,  not equal to altered: %v", safeRMFiles, altered)
+	}
+}
+
 func createTemp(exts []string) (tempDir string) {
 	tempContent := []byte("tempContent")
 	tempDir, err := ioutil.TempDir("", "tempDir")
@@ -99,4 +107,29 @@ func TestValidateDir(t *testing.T) {
 			t.Error("Valid path produced `false`")
 		}
 	})
+}
+
+func TestSafeRM(t *testing.T) {
+	exts := []string{".py", ".txt", ".jpg", ".java"}
+	altered := []string{"tempfile.java", "tempfile.jpg", "tempfile.txt"}
+	tempDir, cleanUpFunc := setupTestCase(exts, t)
+	defer cleanUpFunc(t)
+
+	t.Run("Delete tempfile.py", func(t *testing.T) {
+		var stdin bytes.Buffer
+		tmpFile := filepath.Join(tempDir, "tempfile.py")
+
+		stdin.Write([]byte(tmpFile))
+		compareDirFiles(tmpFile, tempDir, stdin, true, altered, t)
+	})
+
+	t.Run("Delete non-existent file", func(t *testing.T) {
+		var stdin bytes.Buffer
+		tmpFile := filepath.Join(tempDir, "abc123.xyz")
+
+		stdin.Write([]byte(tmpFile))
+
+		compareDirFiles(tmpFile, tempDir, stdin, false, altered, t)
+	})
+
 }
