@@ -21,8 +21,12 @@ func main() {
 	}
 	filenames := readDirFileNames(dirPathVar)
 	for _, filename := range filenames {
-		safeRM(dirPathVar, filename, os.Stdin)
+		safeRMFlag := safeRM(dirPathVar, filename, os.Stdin)
+		if !safeRMFlag {
+			fmt.Print("\t\nIncorrectly spelled name. Skipping...\n\n\n")
+		}
 	}
+	fmt.Println("safeRM completed!")
 }
 
 func init() {
