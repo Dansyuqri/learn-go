@@ -28,7 +28,9 @@ func readDirFileNames(dirPath string) (fileNames []string) {
 	}
 
 	for _, file := range fileInfo {
-		fileNames = append(fileNames, file.Name())
+		if !file.IsDir() {
+			fileNames = append(fileNames, file.Name())
+		}
 	}
 	return
 }
