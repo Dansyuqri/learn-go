@@ -55,7 +55,7 @@ func safeRM(dirPath string, filename string, stdin io.Reader) (pass bool) {
 	userInput := getUserInput(stdin)
 	fullpath := filepath.Join(dirPath, filename)
 	_, err := os.Stat(fullpath)
-	if strings.TrimRight(userInput, "/n") == filename && err == nil {
+	if strings.TrimRight(userInput, "\n") == strings.TrimRight(filename, "\n") && err == nil {
 		os.Remove(fullpath)
 		return true
 	}
