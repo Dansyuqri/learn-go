@@ -44,12 +44,21 @@ func readDirFileNames(dirPath string) (fileNames []string) {
 	return
 }
 
+func setupTestCase(exts []string, t *testing.T) (tempDir string, cleanUpFunc func(t *testing.T)) {
+	tempDir = createTemp(exts)
+
+	cleanUpFunc = func(t *testing.T) {
+		os.RemoveAll(tempDir)
+	}
+	return
+}
+
 func TestCreateTemp(t *testing.T) {
 	exts := []string{".py", ".txt", ".java"}
 	tempFiles := []string{"tempfile.java", "tempfile.py", "tempfile.txt"}
 
-	tempDir := createTemp(exts)
-	defer os.RemoveAll(tempDir)
+	tempDir, cleanUpFunc := setupTestCase(exts, t)
+	defer cleanUpFunc(t)
 
 	fileNames := readDirFileNames(tempDir)
 	if len(fileNames) != len(exts) {
@@ -82,8 +91,8 @@ func TestValidateDir(t *testing.T) {
 
 	exts := []string{}
 
-	tempDir := createTemp(exts)
-	defer os.RemoveAll(tempDir)
+	tempDir, cleanUpFunc := setupTestCase(exts, t)
+	defer cleanUpFunc(t)
 
 	t.Run("Valid Path", func(t *testing.T) {
 		if !validateDir(tempDir) {
