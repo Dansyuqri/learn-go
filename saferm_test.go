@@ -12,7 +12,7 @@ import (
 )
 
 func compareDirFiles(tmpFile string, tempDir string, stdin bytes.Buffer, expectedRMFlag bool, altered []string, t *testing.T) {
-	safeRMFlag := safeRM(tmpFile, &stdin)
+	safeRMFlag := safeRM(tempDir, tmpFile, &stdin)
 	safeRMFiles := readDirFileNames(tempDir)
 	if safeRMFlag != expectedRMFlag || !reflect.DeepEqual(altered, safeRMFiles) {
 		t.Errorf("Files safeRM: %v,  not equal to altered: %v", safeRMFiles, altered)
@@ -118,7 +118,7 @@ func TestSafeRM(t *testing.T) {
 
 	t.Run("Delete tempfile.py", func(t *testing.T) {
 		var stdin bytes.Buffer
-		tmpFile := filepath.Join(tempDir, "tempfile.py")
+		tmpFile := "tempfile.py"
 
 		stdin.Write([]byte(tmpFile))
 		compareDirFiles(tmpFile, tempDir, stdin, true, altered, t)
@@ -126,7 +126,7 @@ func TestSafeRM(t *testing.T) {
 
 	t.Run("Delete non-existent file", func(t *testing.T) {
 		var stdin bytes.Buffer
-		tmpFile := filepath.Join(tempDir, "abc123.xyz")
+		tmpFile := "abc123.xyz"
 
 		stdin.Write([]byte(tmpFile))
 

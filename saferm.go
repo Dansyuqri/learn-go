@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -35,12 +36,13 @@ func readDirFileNames(dirPath string) (fileNames []string) {
 	return
 }
 
-func safeRM(filePath string, stdin io.Reader) (pass bool) {
-	fmt.Printf("Enter file path to confirm deletion: %v", filePath)
+func safeRM(dirPath string, filePath string, stdin io.Reader) (pass bool) {
+	fmt.Printf("Enter filename to confirm deletion: \n%v\n", filePath)
 	userInput := getUserInput(stdin)
-	_, err := os.Stat(filePath)
+	fullpath := filepath.Join(dirPath, filePath)
+	_, err := os.Stat(fullpath)
 	if strings.TrimRight(userInput, "/n") == filePath && err == nil {
-		os.Remove(filePath)
+		os.Remove(fullpath)
 		return true
 	}
 	return false
