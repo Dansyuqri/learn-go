@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -11,8 +12,21 @@ import (
 	"strings"
 )
 
+var dirPathVar string
+
 func main() {
-	fmt.Println("testing lint")
+	flag.Parse()
+	if dirPathVar == "." {
+		dirPathVar, _ = os.Getwd()
+	}
+	filenames := readDirFileNames(dirPathVar)
+	for _, filename := range filenames {
+		safeRM(dirPathVar, filename, os.Stdin)
+	}
+}
+
+func init() {
+	flag.StringVar(&dirPathVar, "p", ".", "Specify the path to run `saferm` on.")
 }
 
 func getUserInput(stdin io.Reader) string {
