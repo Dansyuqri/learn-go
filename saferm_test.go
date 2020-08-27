@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"io/ioutil"
 	"log"
 	"os"
@@ -57,6 +58,18 @@ func TestCreateTemp(t *testing.T) {
 
 	if !reflect.DeepEqual(fileNames, tempFiles) {
 		t.Errorf("Files created: %v,  not equal to tempFiles: %v", fileNames, tempFiles)
+	}
+}
+
+func TestGetUserInput(t *testing.T) {
+	var stdin bytes.Buffer
+	testStr := "testing123"
+
+	stdin.Write([]byte(testStr))
+	userInput := getUserInput(&stdin)
+
+	if userInput != testStr {
+		t.Errorf("Expected %v, Actual %v", testStr, userInput)
 	}
 }
 
