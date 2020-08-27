@@ -36,12 +36,12 @@ func readDirFileNames(dirPath string) (fileNames []string) {
 	return
 }
 
-func safeRM(dirPath string, filePath string, stdin io.Reader) (pass bool) {
-	fmt.Printf("Enter filename to confirm deletion: \n%v\n", filePath)
+func safeRM(dirPath string, filename string, stdin io.Reader) (pass bool) {
+	fmt.Printf("Enter filename to confirm deletion: \n%v\n", filename)
 	userInput := getUserInput(stdin)
-	fullpath := filepath.Join(dirPath, filePath)
+	fullpath := filepath.Join(dirPath, filename)
 	_, err := os.Stat(fullpath)
-	if strings.TrimRight(userInput, "/n") == filePath && err == nil {
+	if strings.TrimRight(userInput, "/n") == filename && err == nil {
 		os.Remove(fullpath)
 		return true
 	}
