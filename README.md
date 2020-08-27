@@ -26,4 +26,4 @@ testfile.txt
 
 ```
 
-Once you have entered the exact filename, it will proceed to delete the file. This painstaking process of typing the exact name of the file will assure you that the deletion is by choice, not accident (similar to how deletion of a reposity on GitHub works).
+Once you have entered the exact filename, it will proceed to delete the file. This painstaking process of typing the exact name of the file will assure you that the deletion is by choice, not accident (similar to how deletion of a repository on GitHub works).
